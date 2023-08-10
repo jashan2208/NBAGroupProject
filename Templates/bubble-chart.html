@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset = "UTF-8">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+   
+    <title>Show Data on Google Column Chart</title>
+      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+      <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+          var data = new google.visualization.DataTable();
+          data.addColumn('string', 'Player');
+          data.addColumn('number', 'Games Played');
+          data.addColumn('number', 'Field Goals');
+          data.addColumn('number', 'Field Attempts');
+
+      var playersData = {{ data | tojson | safe }};
+      data.addRows(playersData.length);
+
+      for (var i = 0; i < playersData.length; i++) {
+        data.setValue(i, 0, playersData[i].player_name);
+        data.setValue(i, 1, playersData[i].games);
+        data.setValue(i, 2, playersData[i].field_goals);
+        data.setValue(i, 3, playersData[i].field_attempts);
+      }
+
+          var options = {
+            title: 'Top Scorers In Season 2023',
+            hAxis: {title: 'Games Played'},
+            vAxis: {title: 'Field Goals'},
+            bubble: {textStyle: {fontSize: 11}}
+          };
+          
+          var chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'))
+          chart.draw(data, options);
+        }
+      </script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">BDAT-1004</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/">Home</a>
+            </li>
+           </ul>
+        </div>
+      </div>
+    </nav>
+      <div style="margin: 10px 0 0 10px;width: 1000px">
+        <h3>Show Data on Google Bubble Chart using Python Flask</h3>
+        
+        <div id="series_chart_div" style="width: 1600px; height: 900px;"></div>
+
+      </div>
+</body>
+</html>
